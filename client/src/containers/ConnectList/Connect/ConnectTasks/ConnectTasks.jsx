@@ -26,7 +26,7 @@ class ConnectTasks extends Component {
     tableData: [],
     showActionModal: false,
     actionMessage: '',
-    roles: JSON.parse(localStorage.getItem('roles'))
+    roles: JSON.parse(sessionStorage.getItem('roles'))
   };
 
   definitionState = {
@@ -64,7 +64,9 @@ class ConnectTasks extends Component {
     try {
       definition = await get(uriGetDefinition(clusterId, connectId, definitionId));
       this.setState({ definition: definition.data }, () => this.handleTasks());
-      history.replace({pathname: `/ui/${clusterId}/connect/${connectId}/definition/${definitionId}/tasks`});
+      history.replace({
+        pathname: `/ui/${clusterId}/connect/${connectId}/definition/${definitionId}/tasks`
+      });
     } catch (err) {
       console.error('Error:', err);
     } finally {
