@@ -13,7 +13,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 class Login extends Form {
   state = {
-    clusterId: '',
     formData: {
       username: '',
       password: ''
