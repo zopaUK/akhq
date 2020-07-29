@@ -123,18 +123,16 @@ class ConsumerGroupList extends Component {
       const offsetLag = calculateTopicOffsetLag(topicOffsets);
 
       return (
-        <div>
-          <a
-            href={`/ui/${this.state.selectedCluster}/topic/${topicId}`}
-            key="lagTopic.topicId"
-            className="btn btn-dark btn-sm mb-1"
-            onClick={noPropagation}
-          >
-            {topicId + ' '}
+        <a
+          href={`/ui/${this.state.selectedCluster}/topic/${topicId}`}
+          key="lagTopic.topicId"
+          className="btn btn-dark btn-sm mb-1 mr-1"
+          onClick={noPropagation}
+        >
+          {topicId + ' '}
 
-            <div className="badge badge-secondary">Lag:{offsetLag}</div>
-          </a>
-        </div>
+          <div className="badge badge-secondary">Lag: {offsetLag}</div>
+        </a>
       );
     });
   }

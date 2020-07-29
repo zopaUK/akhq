@@ -339,7 +339,7 @@ class Table extends Component {
         return (
           <tr>
             <td colSpan={columns.length}>
-              <div className="alert alert-info mb-0" role="alert">
+              <div className="alert alert-warning mb-0" role="alert">
                 {noContent}
               </div>
             </td>
@@ -352,7 +352,7 @@ class Table extends Component {
     return (
       <tr>
         <td colSpan={columns.length}>
-          <div className="alert alert-info mb-0" role="alert">
+          <div className="alert alert-warning mb-0" role="alert">
             No data available
           </div>
         </td>

@@ -5,7 +5,6 @@ import Routes from './utils/Routes';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import { ToastContainer } from 'react-toastify';
-import { organizeRoles } from './utils/converters';
 
 class App extends React.Component {
   render() {

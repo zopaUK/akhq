@@ -4,12 +4,13 @@ import { ROLE_TYPE } from './constants';
 
 export function calculateTopicOffsetLag(topicOffsets) {
   let offsetLag = 0;
-  let firstOffset = 0;
+  let offset = 0;
   let lastOffset = 0;
+
   topicOffsets.forEach(topicOffset => {
-    firstOffset = topicOffset.firstOffset || 0;
+    offset = topicOffset.offset || 0;
     lastOffset = topicOffset.lastOffset || 0;
-    offsetLag += lastOffset - firstOffset;
+    offsetLag += lastOffset - offset;
   });
 
   return offsetLag;

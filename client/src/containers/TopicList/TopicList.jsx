@@ -309,19 +309,6 @@ class TopicList extends Component {
           }
         />
 
-        <div
-          className="navbar navbar-expand-lg navbar-light mr-auto
-        khq-data-filter khq-sticky khq-nav align-right"
-        >
-          <div className="collapse navbar-collapse" />
-          <Pagination
-            pageNumber={pageNumber}
-            totalPageNumber={totalPageNumber}
-            onChange={this.handlePageChange}
-            onSubmit={this.handlePageChangeSubmission}
-          />
-        </div>
-
         {roles.topic['topic/insert'] && (
           <aside>
             <Link

@@ -283,6 +283,7 @@ class TopicConfigs extends Form {
             updateData={data => {
               this.setState({ data });
             }}
+            noContent={'No acl for configs for current kafka user.'}
           />
           {roles.topic && roles.topic['topic/config/update'] && !this.props.internal ? (
             <aside>

@@ -55,7 +55,7 @@ class Header extends Component {
 
   render() {
     const { title, children } = this.props;
-    const { login, goBack } = this.state;
+    const { login } = this.state;
     return (
       <React.Fragment>
         <div
