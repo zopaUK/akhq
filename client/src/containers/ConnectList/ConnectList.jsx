@@ -7,7 +7,6 @@ import constants from '../../utils/constants';
 import { Link } from 'react-router-dom';
 import { get, remove } from '../../utils/api';
 import { uriConnectDefinitions, uriDeleteDefinition } from '../../utils/endpoints';
-import CodeViewModal from '../../components/Modal/CodeViewModal/CodeViewModal';
 import ConfirmModal from '../../components/Modal/ConfirmModal/ConfirmModal';
 import AceEditor from 'react-ace';
 import 'ace-builds/webpack-resolver';
@@ -21,8 +20,6 @@ class ConnectList extends Component {
     clusterId: '',
     connectId: '',
     tableData: [],
-    showConfigModal: false,
-    configModalBody: '',
     showDeleteModal: false,
     definitionToDelete: '',
     deleteMessage: '',
@@ -114,17 +111,6 @@ class ConnectList extends Component {
     this.setState({ tableData });
   };
 
-  showConfigModal = body => {
-    this.setState({
-      showConfigModal: true,
-      configModalBody: body
-    });
-  };
-
-  closeConfigModal = () => {
-    this.setState({ showConfigModal: false, configModalBody: '' });
-  };
-
   showDeleteModal = deleteMessage => {
     this.setState({ showDeleteModal: true, deleteMessage });
   };
@@ -189,7 +175,7 @@ class ConnectList extends Component {
   };
 
   render() {
-    const { clusterId, connectId, tableData, showConfigModal, configModalBody } = this.state;
+    const { clusterId, connectId, tableData } = this.state;
     const roles = this.state.roles || {};
     const { history } = this.props;
 
@@ -338,11 +324,6 @@ class ConnectList extends Component {
           handleCancel={this.closeDeleteModal}
           handleConfirm={this.deleteDefinition}
           message={this.state.deleteMessage}
-        />
-        <CodeViewModal
-          show={showConfigModal}
-          body={configModalBody}
-          handleClose={this.closeConfigModal}
         />
       </div>
     );

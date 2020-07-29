@@ -12,8 +12,6 @@ import {
   uriTopicDataSearch,
   uriTopicsPartitions
 } from '../../../../utils/endpoints';
-import CodeViewModal from '../../../../components/Modal/CodeViewModal/CodeViewModal';
-import Modal from '../../../../components/Modal/Modal';
 import Pagination from '../../../../components/Pagination/Pagination';
 import moment from 'moment';
 import DatePicker from '../../../../components/DatePicker';
@@ -31,10 +29,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 class TopicData extends React.Component {
   state = {
-    showValueModal: false,
-    valueModalBody: '',
-    showHeadersModal: false,
-    headersModalBody: [],
     sortBy: 'Oldest',
     sortOptions: ['Oldest', 'Newest'],
     partitionCount: 0,
@@ -125,30 +119,6 @@ class TopicData extends React.Component {
     this.setState({ percent: 0, isSearching: true }, () => {
       this.startEventSource();
     });
-  };
-
-  showValueModal = body => {
-    this.setState({
-      showValueModal: true,
-      valueModalBody: body
-    });
-  };
-
-  closeValueModal = () => {
-    this.setState({ showValueModal: false, valueModalBody: '' });
-  };
-
-  showHeadersModal = headers => {
-    this.setState({
-      showHeadersModal: true,
-      headersModalBody: Object.keys(headers).map(key => {
-        return { key: key, value: headers[key] };
-      })
-    });
-  };
-
-  closeHeadersModal = () => {
-    this.setState({ showHeadersModal: false, headersModalBody: '' });
   };
 
   async getMessages(changePage = false) {
@@ -432,10 +402,6 @@ class TopicData extends React.Component {
       search,
       offsets,
       messages,
-      showHeadersModal,
-      showValueModal,
-      valueModalBody,
-      headersModalBody,
       pageNumber,
       recordCount,
       showFilters,
@@ -820,6 +786,7 @@ class TopicData extends React.Component {
                   return Object.keys(obj.headers).map(header => {
                     return (
                         <tr
+                            className={'table-sm'}
                             style={{
                               display: 'flex',
                               flexDirection: 'row',
@@ -854,73 +821,12 @@ class TopicData extends React.Component {
                 }}
             />
           </div>
-          <Modal show={showHeadersModal} handleClose={this.closeHeadersModal}>
-            <div className="headers-modal">
-              <button
-                  type="button"
-                  className="close pull-right"
-                  aria-label="Close"
-                  onClick={this.closeHeadersModal}
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-              <Table
-                  firstHeader={[
-                    { colName: 'Key', colSpan: 1 },
-                    { colName: 'Value', colSpan: 1 }
-                  ]}
-                  columns={[
-                    {
-                      id: 'headerKey',
-                      accessor: 'key',
-                      colName: 'Key',
-                      type: 'text',
-                      cell: (obj, col) => {
-                        return obj[col.accessor];
-                      }
-                    },
-                    {
-                      id: 'headerValue',
-                      accessor: 'value',
-                      colName: 'Value',
-                      type: 'text',
-                      cell: (obj, col) => {
-                        return (
-                            <div className="value">
-                              <div className="value-text headers-detail-value">
-                                {obj[col.accessor] ? obj[col.accessor].substring(0, 50) : 'N/A'}
-                                {obj[col.accessor] && obj[col.accessor].length > 50 && '(...)'}{' '}
-                              </div>
-                              <div className="headers-detail-button">
-                                <button
-                                    className="btn btn-secondary headers pull-right"
-                                    onClick={() => this.showValueModal(obj[col.accessor])}
-                                >
-                                  Details
-                                </button>
-                              </div>
-                            </div>
-                        );
-                      }
-                    }
-                  ]}
-                  data={headersModalBody}
-                  updateData={data => {
-                    this.setState({ headersModalBody: data });
-                  }}
-              />
-            </div>
-          </Modal>
+
           <ConfirmModal
               show={this.state.showDeleteModal}
               handleCancel={this.closeDeleteModal}
               handleConfirm={this.deleteCompactMessage}
               message={this.state.deleteMessage}
-          />
-          <CodeViewModal
-              show={showValueModal}
-              body={valueModalBody}
-              handleClose={this.closeValueModal}
           />
         </React.Fragment>
     );

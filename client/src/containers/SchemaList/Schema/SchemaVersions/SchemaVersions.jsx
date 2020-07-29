@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Table from '../../../../components/Table';
 import constants from '../../../../utils/constants';
 import './styles.scss';
-import CodeViewModal from '../../../../components/Modal/CodeViewModal/CodeViewModal';
 import ConfirmModal from '../../../../components/Modal/ConfirmModal';
 import { remove } from '../../../../utils/api';
 import { uriDeleteSchemaVersion } from '../../../../utils/endpoints';
@@ -18,9 +17,7 @@ class SchemaVersions extends Component {
     data: [],
     selectedCluster: this.props.clusterId,
     selectedSchema: this.props.schemaName,
-    showSchemaModal: false,
     schemaVersions: this.props.schemas,
-    schemaModalBody: '',
     deleteMessage: '',
     schemaToDelete: {},
     deleteData: { clusterId: '', subject: '', versionId: 1 },
@@ -51,17 +48,6 @@ class SchemaVersions extends Component {
       this.setState({ data: [] });
     }
   }
-
-  showSchemaModal = body => {
-    this.setState({
-      showSchemaModal: true,
-      schemaModalBody: body
-    });
-  };
-
-  closeSchemaModal = () => {
-    this.setState({ showSchemaModal: false, schemaModalBody: '' });
-  };
 
   handleOnDelete(schema) {
     this.setState({ schemaToDelete: schema }, () => {
@@ -119,7 +105,6 @@ class SchemaVersions extends Component {
   };
 
   render() {
-    const { showSchemaModal, schemaModalBody } = this.state;
     const roles = this.state.roles || {};
     return (
       <div>
@@ -235,11 +220,6 @@ class SchemaVersions extends Component {
           message={this.state.deleteMessage}
         />
 
-        <CodeViewModal
-          show={showSchemaModal}
-          body={schemaModalBody}
-          handleClose={this.closeSchemaModal}
-        />
       </div>
     );
   }

@@ -9,7 +9,6 @@ import Pagination from '../../components/Pagination';
 import ConfirmModal from '../../components/Modal/ConfirmModal';
 import api, { remove } from '../../utils/api';
 import './styles.scss';
-import CodeViewModal from '../../components/Modal/CodeViewModal/CodeViewModal';
 import AceEditor from 'react-ace';
 import 'ace-builds/webpack-resolver';
 import 'ace-builds/src-noconflict/mode-json';
@@ -36,8 +35,6 @@ class SchemaList extends Component {
       compatibilityLevel: '',
       schema: ''
     },
-    showSchemaModal: false,
-    schemaModalBody: '',
     roles: JSON.parse(sessionStorage.getItem('roles'))
   };
 
@@ -48,17 +45,6 @@ class SchemaList extends Component {
       this.getSchemaRegistry();
     });
   }
-
-  showSchemaModal = body => {
-    this.setState({
-      showSchemaModal: true,
-      schemaModalBody: body
-    });
-  };
-
-  closeSchemaModal = () => {
-    this.setState({ showSchemaModal: false, schemaModalBody: '' });
-  };
 
   handleSearch = data => {
     const { searchData } = data;
@@ -170,8 +156,6 @@ class SchemaList extends Component {
       searchData,
       pageNumber,
       totalPageNumber,
-      showSchemaModal,
-      schemaModalBody
     } = this.state;
     const roles = this.state.roles || {};
     const { history } = this.props;
@@ -362,11 +346,6 @@ class SchemaList extends Component {
           message={this.state.deleteMessage}
         />
 
-        <CodeViewModal
-          show={showSchemaModal}
-          body={schemaModalBody}
-          handleClose={this.closeSchemaModal}
-        />
       </div>
     );
   }
