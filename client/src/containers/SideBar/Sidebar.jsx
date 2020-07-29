@@ -225,12 +225,15 @@ class Sidebar extends Component {
         onToggle={expanded => {
           this.props.toggleSidebar(expanded);
         }}
-        style={{ background: 'black', height: height }}
+        style={{ background: 'black', height: height, position: 'fixed' }}
       >
-        <SideNav.Toggle /> <span className="logo" />
+        <SideNav.Toggle />
+        <div className="logo-wrapper">
+          <span className="logo" />
+        </div>
         <SideNav.Nav defaultSelected={`${constants.TOPIC}`} style={{ background: 'black' }}>
           <NavItem style={{ backgroundColor: 'Black', cursor: 'default' }}>
-            <NavIcon></NavIcon>
+            <NavIcon />
             <NavText
               style={{
                 color: 'grey',
