@@ -116,13 +116,16 @@ class Table extends Component {
   }
 
   renderRow(row, index) {
-    const { actions, columns, extraRow, onExpand, noRowBackgroundChange, onDetails, handleExtraExpand, handleExtraCollapse } = this.props;
+    const { actions, columns, extraRow, onExpand, noRowBackgroundChange, onDetails, handleExtraExpand, handleExtraCollapse, reduce } = this.props;
     const { extraExpanded } = this.state;
 
     let extraRowColCollapsed;
     let extraRowColExpanded;
     const items = [
-      <tr key={`tableRow${index}`}>
+      <tr
+        key={`tableRow${index}`}
+        className={reduce ? 'reduce' : ''}
+      >
         {columns.map((column, colIndex) => {
           let extraStyles = [];
           if (noRowBackgroundChange) {
@@ -204,7 +207,7 @@ class Table extends Component {
       );
     }
 
-    if (extraRow) {
+    if (extraRow && extraRowColCollapsed) {
       items.push(
         <tr
           onClick={() => {

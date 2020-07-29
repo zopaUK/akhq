@@ -634,6 +634,7 @@ class TopicData extends React.Component {
           {isSearching && <ProgressBar style={{ height: '0.3rem' }} animated now={percent} />}
           <div className="table-responsive">
             <Table
+                reduce={true}
                 firstHeader={firstColumns}
                 columns={[
                   {

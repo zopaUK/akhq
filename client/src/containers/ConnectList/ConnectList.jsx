@@ -205,7 +205,7 @@ class ConnectList extends Component {
                     mode="json"
                     id={'value' + index}
                     theme="merbivore_soft"
-                    value={obj[col.accessor]}
+                    value={JSON.stringify(JSON.parse(obj[col.accessor]), null, 2)}
                     readOnly
                     name="UNIQUE_ID_OF_DIV"
                     editorProps={{ $blockScrolling: true }}
@@ -217,8 +217,7 @@ class ConnectList extends Component {
                 return (
                   <pre class="mb-0 khq-data-highlight">
                     <code onClick={() => JSON.stringify(JSON.parse(obj[col.accessor]), null, 2)}>
-                      {obj[col.accessor] ? obj[col.accessor].substring(0, 100) : 'N/A'}
-                      {obj[col.accessor] && obj[col.accessor].length > 100 && '(...)'}
+                      {obj[col.accessor]}
                     </code>
                   </pre>
                 );

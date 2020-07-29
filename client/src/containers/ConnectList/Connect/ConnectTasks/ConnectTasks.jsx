@@ -15,6 +15,7 @@ import ConfirmModal from '../../../../components/Modal/ConfirmModal/ConfirmModal
 import './styles.scss';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AceEditor from 'react-ace';
 class ConnectTasks extends Component {
   state = {
     clusterId: this.props.clusterId || this.props.match.params.clusterId,
@@ -239,14 +240,25 @@ class ConnectTasks extends Component {
                 type: 'text',
                 extraRow: true,
                 extraRowContent: (obj, index) => {
-                  return <code>{obj.trace}</code>;
-                },
-                cell: (obj, index) => {
                   return (
-                    <pre class="mb-0 khq-data-highlight">
+                    <AceEditor
+                      mode="text"
+                      id={'value' + index}
+                      theme="merbivore_soft"
+                      value={obj.trace}
+                      readOnly
+                      name="UNIQUE_ID_OF_DIV"
+                      editorProps={{ $blockScrolling: true }}
+                      style={{ width: '100%', minHeight: '25vh' }}
+                    />
+                  );
+                },
+                cell: (obj) => {
+                  return obj.trace ? (
+                    <pre className="mb-0 khq-data-highlight">
                       <code>{obj.trace}</code>
                     </pre>
-                  );
+                  ) : null;
                 }
               }
             ]}

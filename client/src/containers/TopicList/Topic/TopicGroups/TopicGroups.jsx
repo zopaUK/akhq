@@ -82,17 +82,15 @@ class TopicGroups extends Component {
     const noPropagation = e => e.stopPropagation();
     return Object.keys(topics).map(topic => {
       return (
-        <div>
-          <a
-            href={`/ui/${this.state.selectedCluster}/topic/${topic}`}
-            key="lagTopic.topicId"
-            className="btn btn-dark btn-sm mb-1"
-            onClick={noPropagation}
-          >
-            {topic}
-            <div className="badge badge-secondary">Lag:{topics[topic]}</div>
-          </a>
-        </div>
+        <a
+          href={`/ui/${this.state.selectedCluster}/topic/${topic}`}
+          key="lagTopic.topicId"
+          className="btn btn-dark btn-sm mb-1 mr-1"
+          onClick={noPropagation}
+        >
+          {topic}
+          <div className="badge badge-secondary">Lag: {topics[topic]}</div>
+        </a>
       );
     });
   }

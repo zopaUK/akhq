@@ -232,10 +232,7 @@ class SchemaList extends Component {
                 return (
                   <pre className="mb-0 khq-data-highlight">
                     <code>
-                      {obj[col.accessor]
-                        ? obj[col.accessor].substring(0, 100).replace(/(\r\n|\n|\r)/gm, '')
-                        : 'N/A'}
-                      {obj[col.accessor] && obj[col.accessor].length > 100 && '(...)'}
+                      {JSON.stringify(JSON.parse(obj[col.accessor]))}
                     </code>
                   </pre>
                 );

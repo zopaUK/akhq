@@ -159,7 +159,7 @@ class TopicList extends Component {
   handleConsumerGroups = (consumerGroups, topicId) => {
     if (consumerGroups) {
       return consumerGroups.map(consumerGroup => {
-        let className = 'btn btn-sm mb-1 btn-';
+        let className = 'btn btn-sm mb-1 mr-1 btn-';
         let offsetLag = calculateTopicOffsetLag(consumerGroup.offsets);
 
         if (consumerGroup.activeTopics) {
@@ -171,15 +171,14 @@ class TopicList extends Component {
           const noPropagation = e => e.stopPropagation();
 
           return (
-            <div key={consumerGroup.id}>
-              <a
-                href={`/ui/${this.state.selectedCluster}/group/${consumerGroup.id}`}
-                className={className}
-                onClick={noPropagation}
-              >
-                {consumerGroup.id} <div className="badge badge-secondary"> Lag: {offsetLag}</div>
-              </a>
-            </div>
+            <a
+              key={consumerGroup.id}
+              href={`/ui/${this.state.selectedCluster}/group/${consumerGroup.id}`}
+              className={className}
+              onClick={noPropagation}
+            >
+              {consumerGroup.id} <div className="badge badge-secondary"> Lag: {offsetLag}</div>
+            </a>
           );
         }
         return null;
