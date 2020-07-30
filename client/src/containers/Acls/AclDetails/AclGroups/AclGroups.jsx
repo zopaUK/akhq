@@ -17,23 +17,12 @@ class AclTopics extends Component {
   }
 
   async getAcls() {
-    const { history } = this.props;
     const { selectedCluster, principalEncoded } = this.state;
 
-    history.replace({
-      loading: true
-    });
-
-    try {
-      const response = await get(uriAclsByPrincipal(selectedCluster, principalEncoded, 'GROUP'));
-      if (response.data.acls) {
-        const acls = response.data || [];
-        this.handleAcls(acls);
-      }
-    } finally {
-      history.replace({
-        loading: false
-      });
+    const response = await get(uriAclsByPrincipal(selectedCluster, principalEncoded, 'GROUP'));
+    if (response.data.acls) {
+      const acls = response.data || [];
+      this.handleAcls(acls);
     }
   }
 

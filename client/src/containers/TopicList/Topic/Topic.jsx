@@ -200,9 +200,13 @@ class Topic extends Component {
               </div>
             </li>
 
-            <a href={`/ui/${clusterId}/topic/${topicId}/produce`} className="btn btn-primary">
+            <div
+              onClick={() => {
+                this.props.history.push({ pathname: `/ui/${clusterId}/topic/${topicId}/produce` });
+              }}
+              className="btn btn-primary">
               <i className="fa fa-plus" aria-hidden={true} /> Produce to topic
-            </a>
+            </div>
           </aside>
         )}
       </div>

@@ -32,9 +32,6 @@ class Login extends Form {
   login() {
     const { formData } = this.state;
 
-    history.push({
-      loading: true
-    });
     try {
       const body = {
         username: formData.username,
@@ -42,21 +39,12 @@ class Login extends Form {
       };
 
       login(uriLogin(), body)
-        .then(response => {
+        .then(() => {
           this.getData();
-        })
-        .catch(function(err) {
-          this.props.history.replace({
-            ...this.props.history,
-            pathname: '/ui/login',
-            loading: false
-          });
         });
     } catch (err) {
       history.replace({
-        ...this.props.history,
         pathname: '/ui/login',
-        loading: false
       });
     }
   }
@@ -71,16 +59,10 @@ class Login extends Form {
       sessionStorage.setItem('roles', organizeRoles(currentUserData.roles));
 
       this.props.history.push({
-        ...this.props.history,
         pathname: '/ui',
-        loading: false
       });
       window.location.reload(true);
       toast.success(`User '${currentUserData.username}' logged in successfully`);
-    } else {
-      this.props.history.replace({
-        loading: false
-      });
     }
   }
 

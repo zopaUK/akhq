@@ -16,19 +16,9 @@ class TopicAcls extends Component {
   async getAcls() {
     let acls = [];
     const { clusterId, topicId } = this.props;
-    const { history } = this.props;
-    history.replace({
-      loading: true,
-      pathname: `/ui/${clusterId}/topic/${topicId}/acls`
-    });
-    try {
-      acls = await get(uriTopicsAcls(clusterId, topicId));
-      this.handleData(acls.data);
-    } finally {
-      history.replace({
-        loading: false
-      });
-    }
+
+    acls = await get(uriTopicsAcls(clusterId, topicId));
+    this.handleData(acls.data);
   }
 
   handleData(data) {

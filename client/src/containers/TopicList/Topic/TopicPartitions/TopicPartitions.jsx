@@ -15,23 +15,10 @@ class TopicPartitions extends Component {
   }
 
   async getTopicsPartitions() {
-    let partitions = [];
     const { selectedCluster, selectedTopic } = this.state;
-    const { history } = this.props;
-    history.replace({
-      loading: true,
-      pathname: `/ui/${selectedCluster}/topic/${selectedTopic}/partitions`
-    });
-    try {
-      partitions = await get(uriTopicsPartitions(selectedCluster, selectedTopic));
-      this.handleData(partitions.data);
-    } catch (err) {
-      console.error('Error:', err);
-    } finally {
-      history.replace({
-        loading: false
-      });
-    }
+
+    let partitions = await get(uriTopicsPartitions(selectedCluster, selectedTopic));
+    this.handleData(partitions.data);
   }
 
   handleData(partitions) {

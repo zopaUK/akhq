@@ -68,24 +68,14 @@ class SchemaUpdate extends Form {
   async getLatestSchemaVersion() {
     const { history } = this.props;
     const { clusterId, schemaId } = this.state;
-    let data = {};
-    history.replace({
-      ...this.props.location,
-      loading: true
-    });
-    try {
-      data = await get(uriLatestSchemaVersion(clusterId, schemaId));
+    let data = await get(uriLatestSchemaVersion(clusterId, schemaId));
 
-      data = data.data;
-      if (data) {
-        this.handleLatestSchemaVersion(data);
-      }
-      history.replace({ pathname: `/ui/${clusterId}/schema/details/${schemaId}/update`});
-    } finally {
-      history.replace({
-        loading: false
-      });
+    data = data.data;
+    if (data) {
+      this.handleLatestSchemaVersion(data);
     }
+
+    history.replace({ pathname: `/ui/${clusterId}/schema/details/${schemaId}/update`});
   }
 
   handleLatestSchemaVersion = latestSchemaVersion => {
@@ -100,7 +90,6 @@ class SchemaUpdate extends Form {
 
   doSubmit() {
     const { clusterId, formData } = this.state;
-    const { history } = this.props;
     const body = {
       clusterId,
       subject: formData.subject,
@@ -108,28 +97,12 @@ class SchemaUpdate extends Form {
       schema: formData.schema
     };
 
-    history.replace({
-      loading: true
-    });
-
     post(uriUpdateSchema(clusterId, formData.subject), body)
       .then(() => {
-        this.props.history.push({
-          ...this.props.location,
-          loading: false
-        });
         toast.success(`Schema '${formData.subject}' is updated`);
         this.props.getSchemaVersions();
         window.location.reload(false);
-      })
-      .catch(err => {
-        console.log('err', err);
-        this.props.history.replace({
-          ...this.props.location,
-          loading: false
-        });
-      }
-    );
+      });
   }
 
   render() {

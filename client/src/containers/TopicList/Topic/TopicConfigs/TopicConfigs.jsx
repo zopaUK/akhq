@@ -31,21 +31,9 @@ class TopicConfigs extends Form {
   async getTopicsConfig() {
     let configs = [];
     const { selectedCluster, selectedTopic } = this.state;
-    const { history } = this.props;
-    history.replace({
-      loading: true,
-      pathname: `/ui/${selectedCluster}/topic/${selectedTopic}/configs`
-    });
-    try {
-      configs = await get(uriTopicsConfigs(selectedCluster, selectedTopic));
-      this.handleData(configs.data);
-    } catch (err) {
-      console.error('Error:', err);
-    } finally {
-      history.replace({
-        loading: false
-      });
-    }
+
+    configs = await get(uriTopicsConfigs(selectedCluster, selectedTopic));
+    this.handleData(configs.data);
   }
 
   handleData(configs) {
@@ -140,29 +128,16 @@ class TopicConfigs extends Form {
 
   async doSubmit() {
     const { selectedCluster, selectedTopic, changedConfigs } = this.state;
-    const { history } = this.props;
-    history.replace({
-      loading: true
-    });
-    try {
-      await post(uriTopicsUpdateConfigs(selectedCluster, selectedTopic), {
-        clusterId: selectedCluster,
-        topicId: selectedTopic,
-        configs: changedConfigs
-      });
 
-      this.setState({ state: this.state }, () => {
-        this.props.history.replace({
-          loading: false
-        });
-        toast.success(`Topic configs '${selectedTopic}' updated successfully`);
-      });
-    } catch (err) {
-      this.props.history.replace({
-        loading: false
-      });
-      console.error('Error:', err);
-    }
+    await post(uriTopicsUpdateConfigs(selectedCluster, selectedTopic), {
+      clusterId: selectedCluster,
+      topicId: selectedTopic,
+      configs: changedConfigs
+    });
+
+    this.setState({ state: this.state }, () => {
+      toast.success(`Topic configs '${selectedTopic}' updated successfully`);
+    });
   }
 
   getInput(value, name, readOnly, dataType) {

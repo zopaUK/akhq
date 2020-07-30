@@ -13,9 +13,9 @@ import {
 import moment from 'moment';
 import DatePicker from '../../../../components/DatePicker';
 import Tooltip from '@material-ui/core/Tooltip';
-import history from '../../../../utils/history';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 class TopicProduce extends Form {
   state = {
     partitions: [],
@@ -65,48 +65,31 @@ class TopicProduce extends Form {
 
   async componentDidMount() {
     const { clusterId, topicId } = this.props.match.params;
-    this.props.history.replace({
-      ...this.props.location,
-      loading: true
+
+    let response = await get(uriTopicsPartitions(clusterId, topicId));
+    let partitions = response.data.map(item => {
+      return { name: item.id, _id: Number(item.id) };
     });
-    try {
-      let response = await get(uriTopicsPartitions(clusterId, topicId));
-      let partitions = response.data.map(item => {
-        return { name: item.id, _id: Number(item.id) };
-      });
-      this.setState({
-        partitions,
-        formData: {
-          ...this.state.formData,
-          partition: partitions[0]._id
-        }
-      });
-    } catch (err) {
-      console.error('err', err);
-    } finally {
-      this.props.history.replace({
-        ...this.props.location,
-        loading: false
-      });
-    }
+    this.setState({
+      partitions,
+      formData: {
+        ...this.state.formData,
+        partition: partitions[0]._id
+      }
+    });
+
     this.getPreferredSchemaForTopic();
     this.setState({ clusterId, topicId });
   }
 
   async getPreferredSchemaForTopic() {
     const { clusterId, topicId } = this.props.match.params;
-    try {
-      let schema = await get(uriPreferredSchemaForTopic(clusterId, topicId));
-      let keySchema = [];
-      let valueSchema = [];
-      schema.data && schema.data.key && schema.data.key.map(index => keySchema.push(index));
-      schema.data && schema.data.value && schema.data.value.map(index => valueSchema.push(index));
-      this.setState({ keySchema: keySchema, valueSchema: valueSchema });
-    } finally {
-      history.replace({
-        loading: false
-      });
-    }
+    let schema = await get(uriPreferredSchemaForTopic(clusterId, topicId));
+    let keySchema = [];
+    let valueSchema = [];
+    schema.data && schema.data.key && schema.data.key.map(index => keySchema.push(index));
+    schema.data && schema.data.value && schema.data.value.map(index => valueSchema.push(index));
+    this.setState({ keySchema: keySchema, valueSchema: valueSchema });
   }
 
   doSubmit() {
@@ -142,25 +125,13 @@ class TopicProduce extends Form {
     });
 
     topic.headers = headers;
-    this.props.history.replace({
-      ...this.props.location,
-      loading: true
-    });
+
     post(uriTopicsProduce(clusterId, topicId), topic)
       .then(() => {
         this.props.history.push({
-          ...this.props.location,
           pathname: `/ui/${clusterId}/topic/${topicId}`,
-          loading: false
         });
         toast.success(`Produced to ${topicId}.`);
-      })
-      .catch(err => {
-        console.log('err', err);
-        this.props.history.replace({
-          ...this.props.location,
-          loading: false
-        });
       });
   }
 

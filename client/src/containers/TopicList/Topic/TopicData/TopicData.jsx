@@ -67,7 +67,7 @@ class TopicData extends React.Component {
 
   checkProps = () => {
     let { clusterId, topicId } = this.props.match.params;
-    const { history } = this.props;
+
     const roles = this.state.roles || {};
     this.setState(
         {
@@ -76,10 +76,6 @@ class TopicData extends React.Component {
           canAccessSchema: roles.registry && roles.registry['registry/read']
         },
         () => {
-          history.replace({
-            loading: true,
-            pathname: `/ui/${clusterId}/topic/${topicId}/data`
-          });
           this.getMessages();
         }
     );
@@ -192,9 +188,6 @@ class TopicData extends React.Component {
         });
       }
     } finally {
-      history.replace({
-        loading: false
-      });
       if (data.after) {
         let params = data.after.split('/data?')[1];
         history.push({
@@ -225,29 +218,20 @@ class TopicData extends React.Component {
 
   deleteCompactMessage = () => {
     const { selectedCluster, selectedTopic, compactMessageToDelete: message } = this.state;
-    const { history } = this.props;
-    history.replace({ loading: true });
+
     const encodedkey = new Buffer(message.key).toString('base64');
     const deleteData = { partition: parseInt(message.partition), key: encodedkey };
     remove(
         uriTopicDataDelete(selectedCluster, selectedTopic, parseInt(message.partition), encodedkey),
         deleteData
     )
-        .then(res => {
-          this.props.history.replace({
-            ...this.props.location,
-            loading: false
-          });
+        .then(() => {
           toast.success(`Record '${message}' will be deleted on compaction`);
           this.setState({ showDeleteModal: false, compactMessageToDelete: '' }, () => {
             this.getMessages();
           });
         })
-        .catch(err => {
-          this.props.history.replace({
-            ...this.props.location,
-            loading: false
-          });
+        .catch(() => {
           this.setState({ showDeleteModal: false, messageToDelete: {} });
         });
   };

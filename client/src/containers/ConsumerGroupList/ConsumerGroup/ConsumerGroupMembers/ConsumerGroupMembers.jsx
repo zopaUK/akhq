@@ -18,21 +18,10 @@ class ConsumerGroupMembers extends Component {
 
   async getConsumerGroupMembers() {
     const { selectedCluster, selectedConsumerGroup } = this.state;
-    const { history } = this.props;
-    history.replace({
-      loading: true
-    });
-    try {
-      const members = await get(uriConsumerGroupMembers(selectedCluster, selectedConsumerGroup));
 
-      this.handleData(members.data);
-    } catch (err) {
-      console.error('Error:', err);
-    } finally {
-      history.replace({
-        loading: false
-      });
-    }
+    const members = await get(uriConsumerGroupMembers(selectedCluster, selectedConsumerGroup));
+
+    this.handleData(members.data);
   }
 
   handleData(members) {

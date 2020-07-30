@@ -39,7 +39,6 @@ class ConsumerGroupUpdate extends Form {
 
   async getGroupedTopicOffset() {
     const { clusterId, consumerGroupId, groupedTopicOffset, timestamp } = this.state;
-    const { history } = this.props;
     const momentValue = moment(timestamp);
 
     const date =
@@ -57,30 +56,24 @@ class ConsumerGroupUpdate extends Form {
             'YYYY-MM-DDThh:mm:ss.SSS'
           ) + 'Z'
         : '';
-    try {
-      let data = {};
-      if (JSON.stringify(groupedTopicOffset) === JSON.stringify({})) {
-        data = await get(uriConsumerGroup(clusterId, consumerGroupId));
-        data = data.data;
-        if (data) {
-          this.setState({ groupedTopicOffset: data.groupedTopicOffset }, () =>
-            this.createValidationSchema(data.groupedTopicOffset)
-          );
-        } else {
-          this.setState({ groupedTopicOffset: {} });
-        }
-      } else if (date !== '') {
-        data = await get(uriConsumerGroupOffsetsByTimestamp(clusterId, consumerGroupId, date));
-        data = data.data;
-        this.handleOffsetsByTimestamp(data);
+
+    let data = {};
+    if (JSON.stringify(groupedTopicOffset) === JSON.stringify({})) {
+      data = await get(uriConsumerGroup(clusterId, consumerGroupId));
+      data = data.data;
+      if (data) {
+        this.setState({ groupedTopicOffset: data.groupedTopicOffset }, () =>
+          this.createValidationSchema(data.groupedTopicOffset)
+        );
       } else {
-        this.createValidationSchema(groupedTopicOffset);
+        this.setState({ groupedTopicOffset: {} });
       }
-    } finally {
-      history.replace({
-        ...this.props.location,
-        loading: false
-      });
+    } else if (date !== '') {
+      data = await get(uriConsumerGroupOffsetsByTimestamp(clusterId, consumerGroupId, date));
+      data = data.data;
+      this.handleOffsetsByTimestamp(data);
+    } else {
+      this.createValidationSchema(groupedTopicOffset);
     }
   }
 
@@ -162,28 +155,14 @@ class ConsumerGroupUpdate extends Form {
 
   async doSubmit() {
     const { clusterId, consumerGroupId, formData } = this.state;
-    const { history } = this.props;
-    history.replace({
-      loading: true
-    });
-    try {
-      await post(
-        uriConsumerGroupUpdate(clusterId, consumerGroupId),
-        this.createSubmitBody(formData)
-      );
 
-      this.setState({ state: this.state }, () =>
-        this.props.history.replace({
-          loading: false
-        })
-      );
-      toast.success(`Offsets for '${consumerGroupId}' updated successfully.`);
-    } catch (err) {
-      this.props.history.replace({
-        loading: false
-      });
-      console.error('Error:', err);
-    }
+    await post(
+      uriConsumerGroupUpdate(clusterId, consumerGroupId),
+      this.createSubmitBody(formData)
+    );
+
+    this.setState({ state: this.state });
+    toast.success(`Offsets for '${consumerGroupId}' updated successfully.`);
   }
 
   renderGroupedTopicOffset = () => {

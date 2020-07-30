@@ -56,26 +56,15 @@ class ConsumerGroupList extends Component {
   };
 
   async getConsumerGroup() {
-    const { history } = this.props;
     const { selectedCluster, pageNumber, search } = this.state;
 
-    history.replace({
-      loading: true
-    });
-
-    try {
-      let response = await api.get(uriConsumerGroups(selectedCluster, search, pageNumber));
-      response = response.data;
-      if (response.results) {
-        this.handleConsumerGroup(response.results);
-        this.setState({ selectedCluster, totalPageNumber: response.page });
-      } else {
-        this.setState({ selectedCluster, consumerGroups: [], totalPageNumber: 0 });
-      }
-    } finally {
-      history.replace({
-        loading: false
-      });
+    let response = await api.get(uriConsumerGroups(selectedCluster, search, pageNumber));
+    response = response.data;
+    if (response.results) {
+      this.handleConsumerGroup(response.results);
+      this.setState({ selectedCluster, totalPageNumber: response.page });
+    } else {
+      this.setState({ selectedCluster, consumerGroups: [], totalPageNumber: 0 });
     }
   }
 
@@ -157,21 +146,14 @@ class ConsumerGroupList extends Component {
 
   deleteConsumerGroup = () => {
     const { selectedCluster, groupToDelete } = this.state;
-    const { history } = this.props;
 
-    history.replace({ loading: true });
     remove(uriConsumerGroupDelete(selectedCluster, groupToDelete.id))
       .then(() => {
-        this.props.history.replace({
-          loading: false
-        });
+
         toast.success(`Consumer Group '${groupToDelete.id}' is deleted`);
         this.setState({ showDeleteModal: false, groupToDelete: {} }, () => this.getConsumerGroup());
       })
-      .catch(err => {
-        this.props.history.replace({
-          loading: false
-        });
+      .catch(() => {
         this.setState({ showDeleteModal: false, groupToDelete: {} });
       });
   };

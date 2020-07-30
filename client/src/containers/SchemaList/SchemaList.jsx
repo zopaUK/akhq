@@ -71,26 +71,16 @@ class SchemaList extends Component {
   };
 
   async getSchemaRegistry() {
-    const { history } = this.props;
     const { selectedCluster, pageNumber } = this.state;
     const { search } = this.state.searchData;
 
-    history.replace({
-      loading: true
-    });
-    try {
-      let response = await api.get(
-        endpoints.uriSchemaRegistry(selectedCluster, search, pageNumber)
-      );
+    let response = await api.get(
+      endpoints.uriSchemaRegistry(selectedCluster, search, pageNumber)
+    );
 
-      let schemasRegistry = response.data ? response.data.results || [] : [];
-      this.handleSchemaRegistry(schemasRegistry);
-      this.setState({ selectedCluster, totalPageNumber: response.page });
-    } finally {
-      history.replace({
-        loading: false
-      });
-    }
+    let schemasRegistry = response.data ? response.data.results || [] : [];
+    this.handleSchemaRegistry(schemasRegistry);
+    this.setState({ selectedCluster, totalPageNumber: response.page });
   }
 
   handleSchemaRegistry(SchemaRegistry) {
@@ -128,25 +118,18 @@ class SchemaList extends Component {
 
   deleteSchemaRegistry = () => {
     const { selectedCluster, schemaToDelete } = this.state;
-    const { history } = this.props;
     const deleteData = {
       clusterId: selectedCluster,
       subject: schemaToDelete.subject
     };
-    history.replace({ loading: true });
+
     remove(uriDeleteSchema(selectedCluster, schemaToDelete.subject), deleteData)
       .then(() => {
-        this.props.history.replace({
-          loading: false
-        });
         toast.success(`Schema '${schemaToDelete.subject}' is deleted`);
         this.setState({ showDeleteModal: false, schemaToDelete: {} });
         this.getSchemaRegistry();
       })
       .catch(() => {
-        this.props.history.replace({
-          loading: false
-        });
         this.setState({ showDeleteModal: false, schemaToDelete: {} });
       });
   };

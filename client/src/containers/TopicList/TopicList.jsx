@@ -58,21 +58,13 @@ class TopicList extends Component {
 
   deleteTopic = () => {
     const { selectedCluster, topicToDelete } = this.state;
-    const { history } = this.props;
 
-    history.replace({ loading: true });
     remove(uriDeleteTopics(selectedCluster, topicToDelete.id))
       .then(() => {
-        this.props.history.replace({
-          loading: false
-        });
         toast.success(`Topic '${topicToDelete.name}' is deleted`);
         this.setState({ showDeleteModal: false, topicToDelete: {} }, () => this.getTopics());
       })
       .catch(() => {
-        this.props.history.replace({
-          loading: false
-        });
         this.setState({ showDeleteModal: false, topicToDelete: {} }, () => this.getTopics());
       });
   };
@@ -111,30 +103,19 @@ class TopicList extends Component {
   };
 
   async getTopics() {
-    const { history } = this.props;
     const { selectedCluster, pageNumber } = this.state;
     const { search, topicListView } = this.state.searchData;
-    let data = {};
-    history.replace({
-      ...this.props.location,
-      loading: true
-    });
-    try {
-      data = await api.get(uriTopics(selectedCluster, search, topicListView, pageNumber));
-      data = data.data;
-      if (data) {
-        if (data.results) {
-          this.handleTopics(data.results);
-        } else {
-          this.setState({ topics: [] });
-        }
-        this.setState({ selectedCluster, totalPageNumber: data.page });
+
+    let data = await api.get(uriTopics(selectedCluster, search, topicListView, pageNumber));
+    data = data.data;
+
+    if (data) {
+      if (data.results) {
+        this.handleTopics(data.results);
+      } else {
+        this.setState({ topics: [] });
       }
-    } finally {
-      history.replace({
-        ...this.props.location,
-        loading: false
-      });
+      this.setState({ selectedCluster, totalPageNumber: data.page });
     }
   }
 

@@ -22,18 +22,9 @@ class Acls extends Component {
   async getAcls() {
     let acls = [];
     const { clusterId } = this.props.match.params;
-    const { history } = this.props;
-    history.replace({
-      loading: true
-    });
-    try {
-      acls = await get(uriAclsList(clusterId, this.state.searchData.search));
-      this.handleData(acls.data);
-    } finally {
-      history.replace({
-        loading: false
-      });
-    }
+
+    acls = await get(uriAclsList(clusterId, this.state.searchData.search));
+    this.handleData(acls.data);
   }
 
   handleData(acls) {

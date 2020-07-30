@@ -6,7 +6,6 @@ import _ from 'lodash';
 import './styles.scss';
 import SideNav, { NavIcon, NavItem, NavText } from '@trendmicro/react-sidenav';
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
-import history from '../../utils/history';
 
 class Sidebar extends Component {
   state = {
@@ -58,27 +57,21 @@ class Sidebar extends Component {
     });
 
     const clusterId = match ? match.params.clusterId || '' : '';
-    try {
-      let allClusters =
-        _(clusters)
-          .sortBy(cluster => cluster.id)
-          .value() || [];
-      const cluster = allClusters.find(cluster => cluster.id === clusterId);
-      this.setState(
-        {
-          allClusters: allClusters,
-          selectedCluster: (cluster ? cluster.id : allClusters[0].id) || allClusters[0].id
-        },
-        () => {
-          const { selectedCluster } = this.state;
-          callback(selectedCluster);
-        }
-      );
-    } finally {
-      history.replace({
-        loading: false
-      });
-    }
+    let allClusters =
+      _(clusters)
+        .sortBy(cluster => cluster.id)
+        .value() || [];
+    const cluster = allClusters.find(cluster => cluster.id === clusterId);
+    this.setState(
+      {
+        allClusters: allClusters,
+        selectedCluster: (cluster ? cluster.id : allClusters[0].id) || allClusters[0].id
+      },
+      () => {
+        const { selectedCluster } = this.state;
+        callback(selectedCluster);
+      }
+    );
   }
 
   componentDidUpdate(prevProps) {

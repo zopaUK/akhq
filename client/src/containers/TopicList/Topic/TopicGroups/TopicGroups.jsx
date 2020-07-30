@@ -18,28 +18,17 @@ class TopicGroups extends Component {
   }
 
   async getConsumerGroup() {
-    const { history } = this.props;
     const { selectedCluster, topicId } = this.state;
-    let data = {};
-    history.replace({
-      loading: true,
-      pathname: `/ui/${selectedCluster}/topic/${topicId}/groups`
-    });
-    try {
-      data = await api.get(uriTopicsGroups(selectedCluster, topicId));
-      data = data.data;
+
+    let data  = await api.get(uriTopicsGroups(selectedCluster, topicId));
+    data = data.data;
+    if (data) {
       if (data) {
-        if (data) {
-          this.handleGroups(data);
-        } else {
-          this.setState({ consumerGroup: [] });
-        }
-        this.setState({ selectedCluster });
+        this.handleGroups(data);
+      } else {
+        this.setState({ consumerGroup: [] });
       }
-    } finally {
-      history.replace({
-        loading: false
-      });
+      this.setState({ selectedCluster });
     }
   }
 

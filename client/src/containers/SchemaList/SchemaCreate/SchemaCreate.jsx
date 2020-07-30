@@ -47,29 +47,19 @@ class SchemaCreate extends Form {
   async doSubmit() {
     const { formData } = this.state;
     const { clusterId } = this.props.match.params;
-    const { history } = this.props;
     const schema = {
       cluster: clusterId,
       subject: formData.subject,
       schema: formData.schemaData,
       compatibilityLevel: formData.compatibilityLevel
     };
-    history.replace({
-      loading: true
-    });
+
     post(uriSchemaCreate(clusterId), schema)
-      .then(res => {
+      .then(() => {
         this.props.history.push({
           pathname: `/ui/${clusterId}/schema`,
-          loading: false
         });
         toast.success(`Schema '${formData.subject}' is created`);
-      })
-      .catch(err => {
-        console.log('err', err);
-        this.props.history.replace({
-          loading: false
-        });
       });
   }
 

@@ -16,18 +16,9 @@ class TopicAcls extends Component {
   async getAcls() {
     let acls = [];
     const { clusterId, consumerGroupId } = this.props;
-    const { history } = this.props;
-    history.replace({
-      loading: true
-    });
-    try {
-      acls = await get(uriConsumerGroupAcls(clusterId, consumerGroupId));
-      this.handleData(acls.data);
-    } finally {
-      history.replace({
-        loading: false
-      });
-    }
+
+    acls = await get(uriConsumerGroupAcls(clusterId, consumerGroupId));
+    this.handleData(acls.data);
   }
 
   handleData(data) {

@@ -125,9 +125,11 @@ class Routes extends Component {
     ) {
       this.getClusters();
     }
+
     if (!clusters.find(el => el.id === this.state.clusterId) && clusterId !== '401') {
       clusterId = clusters[0] || '';
     }
+
     if (!this.state.loading) {
       if (clusterId) {
         return (

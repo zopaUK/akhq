@@ -59,38 +59,21 @@ class ConnectTasks extends Component {
     let definition = {};
     const { clusterId, connectId, definitionId } = this.state;
     const { history } = this.props;
+
+    definition = await get(uriGetDefinition(clusterId, connectId, definitionId));
+    this.setState({ definition: definition.data }, () => this.handleTasks());
     history.replace({
-      loading: true
+      pathname: `/ui/${clusterId}/connect/${connectId}/definition/${definitionId}/tasks`
     });
-    try {
-      definition = await get(uriGetDefinition(clusterId, connectId, definitionId));
-      this.setState({ definition: definition.data }, () => this.handleTasks());
-      history.replace({
-        pathname: `/ui/${clusterId}/connect/${connectId}/definition/${definitionId}/tasks`
-      });
-    } catch (err) {
-      console.error('Error:', err);
-    } finally {
-      history.replace({
-        loading: false
-      });
-    }
   }
 
   modifyDefinitionState = () => {
     const { definitionId } = this.state;
     const { uri, action, taskId } = this.state.definitionModifyData;
-    const { history } = this.props;
-    history.replace({
-      loading: true
-    });
 
     get(uri)
       .then(() => this.getDefinition())
       .then(() => {
-        this.props.history.replace({
-          loading: false
-        });
         toast.success(
           `${
             taskId !== undefined
@@ -99,11 +82,6 @@ class ConnectTasks extends Component {
           }`
         );
         this.closeActionModal();
-      })
-      .catch(err => {
-        this.props.history.replace({
-          loading: false
-        });
       });
   };
 

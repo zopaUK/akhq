@@ -14,6 +14,7 @@ import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/theme-merbivore_soft';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 class ConnectCreate extends Component {
   state = {
     clusterId: this.props.match.params.clusterId,
@@ -40,20 +41,9 @@ class ConnectCreate extends Component {
 
   async getPlugins() {
     const { connectId, clusterId } = this.state;
-    let plugins = [];
-    const { history } = this.props;
-    history.replace({
-      loading: true
-    });
-    try {
-      plugins = await get(uriConnectPlugins(clusterId, connectId));
-      plugins = plugins.data;
-      this.setState({ clusterId, connectId, plugins: plugins });
-    } finally {
-      history.replace({
-        loading: false
-      });
-    }
+
+    let plugins = await get(uriConnectPlugins(clusterId, connectId));
+    this.setState({ clusterId, connectId, plugins: plugins.data });
   }
 
   onTypeChange = value => {
@@ -414,27 +404,13 @@ class ConnectCreate extends Component {
 
     body.configs = configs;
 
-    const { history } = this.props;
-    history.replace({
-      ...this.props.location,
-      loading: true
-    });
-
     post(uriCreateConnect(clusterId, connectId), body)
       .then(() => {
         this.props.history.push({
-          ...this.props.location,
           pathname: `/ui/${clusterId}/connect/${connectId}`,
+        });
 
-          loading: false
-        });
         toast.success(`${`Connection '${formData.subject}' was created successfully`}`);
-      })
-      .catch(err => {
-        this.props.history.replace({
-          ...this.props.location,
-          loading: false
-        });
       });
   }
 

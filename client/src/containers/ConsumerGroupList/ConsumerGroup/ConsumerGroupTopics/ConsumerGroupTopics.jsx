@@ -18,19 +18,10 @@ class ConsumerGroupTopics extends Component {
   async getConsumerGroupTopics() {
     let offsets = [];
     const { selectedCluster, selectedConsumerGroup } = this.state;
-    const { history } = this.props;
-    history.replace({
-      loading: true
-    });
-    try {
-      offsets = await get(uriConsumerGroupOffsets(selectedCluster, selectedConsumerGroup));
-      offsets = offsets.data;
-      this.handleData(offsets);
-    } finally {
-      history.replace({
-        loading: false
-      });
-    }
+
+    offsets = await get(uriConsumerGroupOffsets(selectedCluster, selectedConsumerGroup));
+    offsets = offsets.data;
+    this.handleData(offsets);
   }
 
   handleData(offsets) {

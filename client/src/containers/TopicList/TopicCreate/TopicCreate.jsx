@@ -45,7 +45,6 @@ class TopicCreate extends Form {
   async doSubmit() {
     const { formData } = this.state;
     const { clusterId } = this.props.match.params;
-    const { history } = this.props;
     const topic = {
       cluster: clusterId,
       name: formData.name,
@@ -57,23 +56,12 @@ class TopicCreate extends Form {
       }
     };
 
-    history.replace({
-      loading: true
-    });
-
     post(uriTopicsCreate(clusterId), topic)
-      .then(res => {
+      .then(() => {
         this.props.history.push({
           pathname: `/ui/${clusterId}/topic`,
-          loading: false
         });
         toast.success(`Topic '${formData.name}' is created`);
-      })
-      .catch(err => {
-        console.log('err', err);
-        this.props.history.replace({
-          loading: false
-        });
       });
   }
   render() {

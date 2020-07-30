@@ -10,7 +10,6 @@ import AceEditor from 'react-ace';
 import 'ace-builds/webpack-resolver';
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/theme-merbivore_soft';
-import history from '../../utils/history';
 
 const STATUS = {
   STOPPED: 'STOPPED',
@@ -37,36 +36,30 @@ class Tail extends Component {
   componentDidMount = async () => {
     const { clusterId } = this.props.match.params;
     const { location } = this.props.history;
-    let data = {};
-    try {
-      data = await get(uriTopics(clusterId, '', 'ALL', ''));
-      data = data.data;
-      let topics = [];
-      if (location.topicId && location.topicId.length > 0) {
-        topics = [{ name: location.topicId }];
-      }
 
-      if (data) {
-        if (data.results) {
-          this.setState({ topics: data.results, selectedTopics: topics }, () => {
-            if (location.topicId && location.topicId.length > 0) {
-              this.setState({ selectedStatus: STATUS.STARTED });
-              this.startEventSource();
-            }
-          });
-        } else {
-          this.setState({ topics: [], selectedTopics: topics }, () => {
-            if (location.topicId && location.topicId.length > 0) {
-              this.setState({ selectedStatus: STATUS.STARTED });
-              this.startEventSource();
-            }
-          });
-        }
+    let data = await get(uriTopics(clusterId, '', 'ALL', ''));
+    data = data.data;
+    let topics = [];
+    if (location.topicId && location.topicId.length > 0) {
+      topics = [{ name: location.topicId }];
+    }
+
+    if (data) {
+      if (data.results) {
+        this.setState({ topics: data.results, selectedTopics: topics }, () => {
+          if (location.topicId && location.topicId.length > 0) {
+            this.setState({ selectedStatus: STATUS.STARTED });
+            this.startEventSource();
+          }
+        });
+      } else {
+        this.setState({ topics: [], selectedTopics: topics }, () => {
+          if (location.topicId && location.topicId.length > 0) {
+            this.setState({ selectedStatus: STATUS.STARTED });
+            this.startEventSource();
+          }
+        });
       }
-    } finally {
-      history.replace({
-        loading: false
-      });
     }
   };
 
@@ -98,10 +91,6 @@ class Tail extends Component {
     });
 
     this.eventSource.onerror = e => {
-      this.props.history.replace({
-        ...this.props.location,
-        loading: false
-      });
       this.setState({ selectedStatus: STATUS.STOPPED });
     };
   };

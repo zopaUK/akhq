@@ -21,23 +21,11 @@ class NodeLogs extends Component {
   async getNodesLogs() {
     let logs = [];
     const { selectedCluster, selectedNode } = this.state;
-    const { history } = this.props;
-    history.replace({
-      loading: true,
-      pathname: `/ui/${selectedCluster}/node/${selectedNode}/logs`
-    });
-    try {
-      logs = await get(uriNodesLogs(selectedCluster, selectedNode));
-      logs = logs.data.sort(sortBy('partition', false))
-                      .sort(sortBy('topic', false));
-      this.handleData(logs);
-    } catch (err) {
-      console.error('Error:', err);
-    } finally {
-      history.replace({
-        loading: false
-      });
-    }
+
+    logs = await get(uriNodesLogs(selectedCluster, selectedNode));
+    logs = logs.data.sort(sortBy('partition', false))
+                    .sort(sortBy('topic', false));
+    this.handleData(logs);
   }
 
   handleData(logs) {

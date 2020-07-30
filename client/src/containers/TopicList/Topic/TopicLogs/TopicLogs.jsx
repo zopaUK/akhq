@@ -16,23 +16,10 @@ class TopicLogs extends Component {
   }
 
   async getTopicLogs() {
-    let logs = [];
     const { selectedCluster, selectedTopic } = this.state;
-    const { history } = this.props;
-    history.replace({
-      loading: true,
-      pathname: `/ui/${selectedCluster}/topic/${selectedTopic}/logs`
-    });
-    try {
-      logs = await get(uriTopicsLogs(selectedCluster, selectedTopic));
-      this.handleData(logs.data);
-    } catch (err) {
-      console.error('Error:', err);
-    } finally {
-      history.replace({
-        loading: false
-      });
-    }
+
+    let logs = await get(uriTopicsLogs(selectedCluster, selectedTopic));
+    this.handleData(logs.data);
   }
 
   handleData(logs) {

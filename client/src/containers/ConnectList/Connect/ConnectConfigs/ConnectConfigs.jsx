@@ -40,42 +40,25 @@ class ConnectConfigs extends Form {
     const { connectId, clusterId, definitionId } = this.state;
     let configs = [];
     const { history } = this.props;
-    history.replace({
-      loading: true
+
+    configs = await get(uriConnectDefinitionConfigs(clusterId, connectId, definitionId));
+    this.setState({ configs: configs.data }, () => {
+      const pluginId = this.state.configs['connector.class'];
+      this.getPlugin(pluginId);
     });
-    try {
-      configs = await get(uriConnectDefinitionConfigs(clusterId, connectId, definitionId));
-      this.setState({ configs: configs.data }, () => {
-        const pluginId = this.state.configs['connector.class'];
-        this.getPlugin(pluginId);
-      });
-      history.replace({
-        pathname: `/ui/${clusterId}/connect/${connectId}/definition/${definitionId}/configs`
-      });
-    } finally {
-      history.replace({
-        loading: false
-      });
-    }
+    history.replace({
+      pathname: `/ui/${clusterId}/connect/${connectId}/definition/${definitionId}/configs`
+    });
   }
 
   async getPlugin(pluginId) {
     const { connectId, clusterId } = this.state;
     let plugin = {};
-    const { history } = this.props;
-    history.replace({
-      loading: true
+
+    plugin = await get(uriConnectPlugin(clusterId, connectId, pluginId));
+    this.setState({ plugin: plugin.data }, () => {
+      this.renderForm();
     });
-    try {
-      plugin = await get(uriConnectPlugin(clusterId, connectId, pluginId));
-      this.setState({ plugin: plugin.data }, () => {
-        this.renderForm();
-      });
-    } finally {
-      history.replace({
-        loading: false
-      });
-    }
   }
 
   handleSchema = definitions => {
@@ -366,24 +349,14 @@ class ConnectConfigs extends Form {
     body.configs = configs;
 
     const { history } = this.props;
-    history.replace({
-      ...this.props.location,
-      loading: true
+
+    await post(uriUpdateDefinition(clusterId, connectId, definitionId), body);
+
+    history.push({
+      pathname: `/ui/${clusterId}/connect/${connectId}`,
     });
-    try {
-      await post(uriUpdateDefinition(clusterId, connectId, definitionId), body);
-      history.push({
-        ...this.props.location,
-        pathname: `/ui/${clusterId}/connect/${connectId}`,
-        loading: false
-      });
-      toast.success(`${`Definition '${formData.name}' is updated`}`);
-    } catch (err) {
-      history.replace({
-        ...this.props.location,
-        loading: false
-      });
-    }
+
+    toast.success(`${`Definition '${formData.name}' is updated`}`);
   }
 
   render() {

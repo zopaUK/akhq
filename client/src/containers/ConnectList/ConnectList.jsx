@@ -49,46 +49,23 @@ class ConnectList extends Component {
   async getConnectDefinitions() {
     let connectDefinitions = [];
     const { clusterId, connectId } = this.state;
-    const { history } = this.props;
-    history.replace({
-      ...this.props.location,
-      loading: true
-    });
-    try {
-      connectDefinitions = await get(uriConnectDefinitions(clusterId, connectId));
-      this.handleData(connectDefinitions.data);
-      this.setState({ selectedCluster: clusterId });
-      history.replace({
-        ...this.props.location,
-        loading: false
-      });
-    } catch (err) {
-      history.replace({
-        loading: false
-      });
-    }
+
+    connectDefinitions = await get(uriConnectDefinitions(clusterId, connectId));
+    this.handleData(connectDefinitions.data);
+    this.setState({ selectedCluster: clusterId });
   }
 
   deleteDefinition = () => {
     const { clusterId, connectId, definitionToDelete: definition } = this.state;
-    const { history } = this.props;
-    history.replace({ loading: true });
+
     remove(uriDeleteDefinition(clusterId, connectId, definition))
       .then(() => {
-        this.props.history.replace({
-          ...this.props.location,
-          loading: false
-        });
         toast.success(`Definition '${definition}' is deleted`);
         this.setState({ showDeleteModal: false, definitionToDelete: '' }, () => {
           this.getConnectDefinitions();
         });
       })
       .catch(() => {
-        this.props.history.replace({
-          ...this.props.location,
-          loading: false
-        });
         this.setState({ showDeleteModal: false, topicToDelete: {} });
       });
   };

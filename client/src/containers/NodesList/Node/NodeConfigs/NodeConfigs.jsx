@@ -29,26 +29,10 @@ class NodeConfigs extends Form {
   }
 
   async getNodesConfig() {
-    let configs = [];
     const { selectedCluster, selectedNode } = this.state;
-    const { history } = this.props;
-    history.replace({
-      ...history,
-      loading: true,
-      pathname: `/ui/${selectedCluster}/node/${selectedNode}/configs`
-    });
-    try {
-      configs = await get(uriNodesConfigs(selectedCluster, selectedNode));
-      this.handleData(configs.data);
-      history.replace({
-        ...history,
-        loading: false
-      });
-    } finally {
-      history.replace({
-        loading: false
-      });
-    }
+
+    let configs = await get(uriNodesConfigs(selectedCluster, selectedNode));
+    this.handleData(configs.data);
   }
 
   handleData(configs) {
@@ -143,36 +127,19 @@ class NodeConfigs extends Form {
 
   async doSubmit() {
     const { selectedCluster, selectedNode, changedConfigs } = this.state;
-    const { history } = this.props;
     let { configs } = this.state;
 
-    history.replace({
-      loading: true
+    await post(uriNodesUpdateConfigs(selectedCluster, selectedNode), {
+      configs: changedConfigs
     });
-    try {
-      await post(uriNodesUpdateConfigs(selectedCluster, selectedNode), {
-        configs: changedConfigs
-      });
 
-      this.setState({ state: this.state }, () =>
-        this.props.history.replace({
-          loading: false
-        })
-      );
-      toast.success(`Node configs '${selectedNode}' updated successfully.`);
-      Object.keys(changedConfigs).forEach(key => {
-        const changedConfig = changedConfigs[key];
-        const configIndex = configs.findIndex(config => config.name === key);
-        configs[configIndex].value = changedConfig;
-      });
-
-      this.setState({ configs });
-    } catch (err) {
-      this.props.history.replace({
-        loading: false
-      });
-      console.error('Error:', err);
-    }
+    this.setState({ state: this.state });
+    toast.success(`Node configs '${selectedNode}' updated successfully.`);
+    Object.keys(changedConfigs).forEach(key => {
+      const changedConfig = changedConfigs[key];
+      const configIndex = configs.findIndex(config => config.name === key);
+      configs[configIndex].value = changedConfig;
+    });
   }
 
   getInput(value, name, readOnly, dataType) {
