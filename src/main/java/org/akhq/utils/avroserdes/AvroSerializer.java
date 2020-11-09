@@ -1,19 +1,16 @@
-package org.akhq.modules;
+package org.akhq.utils.avroserdes;
 
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient;
 import io.confluent.kafka.schemaregistry.client.rest.exceptions.RestClientException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.Schema;
-import org.apache.avro.generic.GenericDatumReader;
 import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.io.DatumReader;
 import org.apache.avro.io.Decoder;
 import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.io.Encoder;
 import org.apache.avro.io.EncoderFactory;
-import org.akhq.configs.Connection;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -52,7 +49,7 @@ public class AvroSerializer {
 
         Decoder decoder = DecoderFactory.get().jsonDecoder(schema, din);
 
-        DatumReader<Object> reader = new GenericDatumReader<>(schema);
+        DatumReader<Object> reader = new BigDecimalFriendlyGenericDatumReader<>(schema);
         Object datum = reader.read(null, decoder);
 
         GenericDatumWriter<Object> w = new GenericDatumWriter<>(schema);

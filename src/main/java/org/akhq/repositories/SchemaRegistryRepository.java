@@ -9,7 +9,7 @@ import io.confluent.kafka.schemaregistry.client.rest.exceptions.RestClientExcept
 import io.confluent.kafka.schemaregistry.utils.JacksonMapper;
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import org.akhq.models.Schema;
-import org.akhq.modules.AvroSerializer;
+import org.akhq.utils.avroserdes.AvroSerializer;
 import org.akhq.modules.KafkaModule;
 import org.akhq.utils.PagedList;
 import org.akhq.utils.Pagination;

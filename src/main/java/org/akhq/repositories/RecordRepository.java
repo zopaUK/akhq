@@ -25,7 +25,7 @@ import org.codehaus.httpcache4j.uri.URIBuilder;
 import org.akhq.models.Partition;
 import org.akhq.models.Record;
 import org.akhq.models.Topic;
-import org.akhq.modules.AvroSerializer;
+import org.akhq.utils.avroserdes.AvroSerializer;
 import org.akhq.modules.KafkaModule;
 import org.akhq.utils.Debug;
 import org.apache.kafka.clients.consumer.*;
