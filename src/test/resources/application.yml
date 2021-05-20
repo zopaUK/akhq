@@ -55,7 +55,6 @@ akhq:
         enable.auto.commit: "false"
 
   topic:
-    default-view: HIDE_INTERNAL
     replication: 1
     retention: 86400000
     partition: 1
@@ -79,7 +78,8 @@ akhq:
   security:
     default-group: no-filter
     groups:
-      - name: admin
+      admin:
+        name: admin
         roles:
           - topic/read
           - topic/insert
@@ -104,23 +104,28 @@ akhq:
           - connect/update
           - connect/delete
           - connect/state/update
-      - name: limited
+      limited:
+        name: limited
         roles:
           - topic/read
           - topic/insert
           - topic/delete
           - registry/version/delete
         attributes:
-          topics-filter-regexp: "test.*"
-      - name: operator
+          topics-filter-regexp:
+            - "test.*"
+      operator:
+        name: operator
         roles:
           - topic/read
           - topic/data/read
           - topic/data/insert
           - topic/data/delete
         attributes:
-          topics-filter-regexp: "test-operator.*"
-      - name: no-filter
+          topics-filter-regexp:
+            - "test-operator.*"
+      no-filter:
+        name: no-filter
         roles:
           - topic/read
           - topic/insert
@@ -147,4 +152,3 @@ akhq:
         - username: user2
           groups:
             - operator
-
