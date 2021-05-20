@@ -6,6 +6,7 @@ import org.akhq.Breed;
 import org.akhq.Cat;
 import org.akhq.Dog;
 import org.akhq.PetOwner;
+import org.akhq.configs.SchemaRegistryType;
 import org.akhq.utils.avroserdes.AvroSerializer;
 import org.akhq.utils.avroserdes.AvroToJsonSerializer;
 import org.apache.avro.Conversion;
@@ -30,10 +31,9 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AvroJsonSerdesTest {
-
     @Mock
-    private static MockSchemaRegistryClient registryClient = new MockSchemaRegistryClient();
-    private static AvroSerializer avroSerializer = new AvroSerializer(registryClient);
+    private static final MockSchemaRegistryClient registryClient = new MockSchemaRegistryClient();
+    private static final AvroSerializer avroSerializer = new AvroSerializer(registryClient, SchemaRegistryType.CONFLUENT);
 
     private static final Conversion<BigDecimal> DECIMAL_CONVERSION = new Conversions.DecimalConversion();
 
@@ -116,7 +116,7 @@ public class AvroJsonSerdesTest {
     private static byte[] fromGenericRecordToEncodedBytes(GenericRecord datum, int schemaId) throws IOException {
         GenericDatumWriter<Object> w = new GenericDatumWriter<>(datum.getSchema());
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        outputStream.write(AvroSerializer.MAGIC_BYTE);
+        outputStream.write(getMagicByte(SchemaRegistryType.CONFLUENT));
         outputStream.write(ByteBuffer.allocate(AvroSerializer.SCHEMA_ID_SIZE).putInt(schemaId).array());
 
         Encoder e = EncoderFactory.get().binaryEncoder(outputStream, null);
@@ -127,4 +127,7 @@ public class AvroJsonSerdesTest {
         return outputStream.toByteArray();
     }
 
+    private static byte getMagicByte(SchemaRegistryType schemaRegistryType) {
+        return (schemaRegistryType == SchemaRegistryType.TIBCO) ? (byte) 0x80: 0x0;
+    }
 }

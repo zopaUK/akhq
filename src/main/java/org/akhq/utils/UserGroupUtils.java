@@ -28,7 +28,7 @@ public class UserGroupUtils {
             return new ArrayList<>();
         }
 
-        return securityProperties.getGroups().stream()
+        return securityProperties.getGroups().values().stream()
             .filter(group -> groups.contains(group.getName()))
             .filter(group -> group.getRoles() != null)
             .flatMap(group -> group.getRoles().stream())
@@ -48,12 +48,12 @@ public class UserGroupUtils {
             return null;
         }
 
-        return securityProperties.getGroups().stream()
+        return securityProperties.getGroups().values().stream()
             .filter(group -> groups.contains(group.getName()))
             .flatMap(group -> (group.getAttributes() != null) ? group.getAttributes().entrySet().stream() : null)
             .collect(Collectors.toMap(
                 Map.Entry::getKey,
-                item -> new ArrayList<>(Collections.singletonList(item.getValue())),
+                item -> new ArrayList<>(item.getValue()),
                 (e1, e2) -> {
                     ((List) e1).addAll((List) e2); return e1;
                 }
